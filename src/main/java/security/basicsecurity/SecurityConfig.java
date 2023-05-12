@@ -101,15 +101,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 //        // 세션 고정 보호
 //        http
-//                .sessionManagement()
-//                .sessionFixation()
+//                .sessionManagement()      // 세션 관리 기능이 동작
+//                .sessionFixation()        // 세션 고정
 //                      .changeSessionId()  // 기본값 - 세션 Id만 변경 // 서블릿 3.1 이상의 기본값
 //                      .none()             // 설정 안함.
 //                      .migrateSession()   // changeSessionId()와 동일하지만, 서블릿 3.1 이하의 기본값 -> 즉 몰라도된다. 지금 9.0이다..;;
-//                      .newSession();       // 기본값과 다른 점은 새로운 세션과 ID가 발급되지만, 이전에 있었던 세부설정을 사용하지 못한다.
+//                      .newSession();      // 기본값과 다른 점은 새로운 세션과 ID가 발급되지만, 이전에 있었던 세부설정을 사용하지 못한다.
 //         // 세션 정책
 //         http
-//                .sessionManagement()
+//                .sessionManagement()  // 세션 관리 기능이 동작
 //                      .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)        // 스프링 시큐리티가 항상 세션 생성
 //                      .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)   // 스프링 시큐리티가 필요시 생성(기본값)
 //                      .sessionCreationPolicy(SessionCreationPolicy.NEVER)         // 스프링 시큐리티가 생성하지 않지만 이지 존재하면 사용
