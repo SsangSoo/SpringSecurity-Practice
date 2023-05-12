@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsService userDetailsService;
 
-    //    // FormLogin
+        // FormLogin
 //    @Override
 //    protected void configure(HttpSecurity http) throws Exception {
 //        // 인가
@@ -37,20 +37,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        // 인증
 //        http
 //                .formLogin()
-////                .loginPage("/loginPage")
-//                .defaultSuccessUrl("/")
-//                .failureUrl("/login")
-//                .usernameParameter("userId")
-//                .passwordParameter("passwd")
-//                .loginProcessingUrl("/login-proc")
-//                .successHandler(new AuthenticationSuccessHandler() {
+////                .loginPage("/loginPage")        // 로그인 페이지
+//                .defaultSuccessUrl("/")           // 인증 성공 후 Url
+//                .failureUrl("/login")             // 인증 실패시 Url
+//                .usernameParameter("userId")      // 아이디 파라미터명 설정
+//                .passwordParameter("passwd")      // 패스워드 파라미터명 설정
+//                .loginProcessingUrl("/login-proc")  // 로그인 Form Action Url
+//                .successHandler(new AuthenticationSuccessHandler() {    // 로그인 성공 후 핸들러
 //                    @Override
 //                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 //                        System.out.println("authentication : " + authentication.getName());
 //                        response.sendRedirect("/");
 //                    }
 //                })
-//                .failureHandler(new AuthenticationFailureHandler() {
+//                .failureHandler(new AuthenticationFailureHandler() {    // 로그인 실패 후 핸들러
 //                    @Override
 //                    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 //                        System.out.println("exception : " + exception.getMessage());
@@ -83,10 +83,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        // Remember Me
 //        http
 //                .rememberMe()
-//                .rememberMeParameter("remember")  // 기본 파라미터명은 remember-me
-//                .tokenValiditySeconds(3600) // Default 14일 // 단위 : 초
-//                .alwaysRemember(false)   // 리멤버 미 기능이 활성화되지 않아도 항상 실행   // default값은 false라서 굳이 안 적어도 됨(소스코드 독스 참조)
+//                .rememberMeParameter("remember")          // 기본 파라미터명은 remember-me
+//                .tokenValiditySeconds(3600)               // Default 14일 // 단위 : 초
+//                .alwaysRemember(false)                    // 리멤버 미 기능이 활성화되지 않아도 항상 실행   // default값은 false라서 굳이 안 적어도 됨(소스코드 독스 참조)
 //                .userDetailsService(userDetailsService)   // 리멤버미 기능 사용시 시스템에서 사용자 계정을 조회할 때 필요한 클래스 및 메서드
+//        ;
+//
+//        // Session 동시 제어
+//        http
+//                .sessionManagement()
+//                .invalidSessionUrl("/invalid")    // 세션이 유효하지 않을 때 이동할 페이지
+//                .maximumSessions(1)               // 최대 허용 가능 세션 수, -1 : 무제한 로그인 세션 허용
+//                .maxSessionsPreventsLogin(true)   // 동시 로그인 차단함(현재 사용자 인증 실패-최근 사용자 로그인 거부), false : 기존 세션 만료전략 (default)
+//                .expiredUrl("/expried")           // 세션이 만료된 경우 이동 할 페이지
 //        ;
 //    }
 
@@ -99,6 +108,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin();
         http
                 .rememberMe()
-                .userDetailsService(userDetailsService);
+                .userDetailsService(userDetailsService)
+                .tokenValiditySeconds(3600)
+                .userDetailsService(userDetailsService)
+        ;
+
     }
 }
