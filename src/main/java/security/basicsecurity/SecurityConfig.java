@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,8 +24,8 @@ import java.io.IOException;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    UserDetailsService userDetailsService;
+//    @Autowired
+//    UserDetailsService userDetailsService;
 
         // FormLogin
 //    @Override
@@ -97,7 +98,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .maxSessionsPreventsLogin(true)   // 동시 로그인 차단함(현재 사용자 인증 실패-최근 사용자 로그인 거부), false : 기존 세션 만료전략 (default)
 //                .expiredUrl("/expried")           // 세션이 만료된 경우 이동 할 페이지
 //        ;
+
+//        // 세션 고정 보호
+//        http
+//                .sessionManagement()
+//                .sessionFixation()
+//                      .changeSessionId()  // 기본값 - 세션 Id만 변경 // 서블릿 3.1 이상의 기본값
+//                      .none()             // 설정 안함.
+//                      .migrateSession()   // changeSessionId()와 동일하지만, 서블릿 3.1 이하의 기본값 -> 즉 몰라도된다. 지금 9.0이다..;;
+//                      .newSession();       // 기본값과 다른 점은 새로운 세션과 ID가 발급되지만, 이전에 있었던 세부설정을 사용하지 못한다.
+//         // 세션 정책
+//         http
+//                .sessionManagement()
+//                      .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)        // 스프링 시큐리티가 항상 세션 생성
+//                      .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)   // 스프링 시큐리티가 필요시 생성(기본값)
+//                      .sessionCreationPolicy(SessionCreationPolicy.NEVER)         // 스프링 시큐리티가 생성하지 않지만 이지 존재하면 사용
+//                      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)     // 스프링 시큐리티가 생성하지 않고 존재해도 사용하지 않음. // 보통 JWT 사용시 적용
+
+
 //    }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -107,11 +127,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .formLogin();
         http
-                .rememberMe()
-                .userDetailsService(userDetailsService)
-                .tokenValiditySeconds(3600)
-                .userDetailsService(userDetailsService)
-        ;
-
+                .sessionManagement()
+                ;
     }
+
+
 }
