@@ -2,6 +2,7 @@ package security.basicsecurity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,10 +11,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -116,33 +122,47 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                      .sessionCreationPolicy(SessionCreationPolicy.NEVER)         // 스프링 시큐리티가 생성하지 않지만 이지 존재하면 사용
 //                      .sessionCreationPolicy(SessionCreationPolicy.STATELESS)     // 스프링 시큐리티가 생성하지 않고 존재해도 사용하지 않음. // 보통 JWT 사용시 적용
 
+            // 인가 API
+//          http
+//            .authorizeRequests()
+//            .antMatchers("/login").permitAll()
+//                .antMatchers("/user").hasRole("USER")
+//                .antMatchers("/admin/pay").hasRole("ADMIN")
+//                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
+//                .anyRequest().authenticated();  // 외의 모든 요청은 인증을 받아야한다.
+//            http
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new AuthenticationEntryPoint() { // AuthenticationEntryPoint를 구현한 구현체를 넣어준다.
 
+//            http
+//                     .formLogin()
+//                     .successHandler(new AuthenticationSuccessHandler() { // AuthenticationSuccessHandler를 구현한 구현체를 넣어준다.
+//        @Override
+//        public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//            RequestCache requestCache = new HttpSessionRequestCache(); // ExceptionTranslationFilter의 요청정보를 세션에 저장해둠.
+//            SavedRequest savedRequest = requestCache.getRequest(request, response); // requestCache에서 불러와서 SaveRequest에 저장한다.
+//            String redirectUrl = savedRequest.getRedirectUrl(); // savedRequest에서 URL 정보를 불러옴.
+//            response.sendRedirect(redirectUrl); // 응답을보낼 때, 불러온 URL로 리다이렉트한다.
+//        }
+//    });
+//            http
+//              .csrf()     // csrf필터 기본활성화
+//              .disable(); // 비활성화
+
+//
 //    }
 
 
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("user").password("{noop}1111").roles("USER");
-        auth.inMemoryAuthentication().withUser("sys").password("{noop}1111").roles("SYS");
-        auth.inMemoryAuthentication().withUser("admin").password("{noop}1111").roles("ADMIN");
-
-    }
-
-
     protected void configure(HttpSecurity http) throws Exception {
+
         http
                 .authorizeRequests()
-                .antMatchers("/user").hasRole("USER")
-                //
-                .antMatchers("/admin/pay").hasRole("ADMIN")
-                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')")
-                // 주석 중간의 두 줄의 위치를 바꾸면, sys 계정으로 로그인하고도 /admin/** , /admin/pay로 접근 가능함.
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
         http
-                .formLogin();
-
+                .formLogin()
+                ;
     }
-
 
 }
